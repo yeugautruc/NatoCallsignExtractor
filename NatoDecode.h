@@ -115,15 +115,15 @@ public:
         {"@@@", {"triple"}}};
 
     const unordered_map<string, string> devider = {
-        {"CLIMB", "climb"},
-        {"EXPECT", "expect"},
-        {"DESCEND", "descend"},
-        {"DIRECT_TO", "direct"},
-        {"CORRECTION", "correction"},
-        {"CONTACT", "contact"},
-        {"MAINTAIN", "maintain"},
         {"HEADING", "heading"},
         {"CLEARED", "cleared"},
+        {"DESCEND", "descend"},
+        {"EXPECT", "expect"},
+        {"DIRECT_TO", "direct"},
+        {"CORRECTION", "correction"},
+        {"CLIMB", "climb"}, 
+        {"CONTACT", "contact"},
+        {"MAINTAIN", "maintain"},
         {"ftITUDE", "when"},
     };
 };

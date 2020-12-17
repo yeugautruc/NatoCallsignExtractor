@@ -139,8 +139,8 @@ void CallsignExtractor::extractCallSignWordSeq(string wordSeq, string &callSignW
 
         if (positions.size() != 0)
         {
-            auto it = max_element(std::begin(cloud), std::end(cloud));
-            callSignWordSeq = wordSeq.substr(0, static_cast<int>(wordSeq.find(i.second)));
+            auto it = min_element(std::begin(positions), std::end(positions));
+            callSignWordSeq = wordSeq.substr(0, static_cast<int>(*it));
             break;
         };
         callSignWordSeq = wordSeq;
