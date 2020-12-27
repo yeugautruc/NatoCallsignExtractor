@@ -24,8 +24,15 @@ int main()
     for (int t = 0; t < c1.getCallSigns().size(); t++)
     {
         cout << "Full Seq:" << testWordSeqs[t] << ".\n";
-        cout << "Extracted Seq:" << c1.getCallSignWordSeqs()[t] << ".\n";
+        cout << "Call sign Seq:" << c1.getCallSignWordSeqs()[t] << ".\n";
         cout << "Call sign: " << c1.getCallSigns()[t] << ".\n";
+        cout << "Not call sign Seq:" << c1.getNotCallSignWordSeqs()[t] << ".\n";
+        cout << "Number extracted: ";
+        for (int k = 0; k < c1.getNumberFromNotCallSigns()[t].size(); k++)
+        {
+            cout << c1.getNumberFromNotCallSigns()[t][k] << " ";
+        }
+        cout << endl;
         cout << "Command:" << testWordCommands[t] << ".\n\n";
     }
 }

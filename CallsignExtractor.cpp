@@ -1,7 +1,8 @@
 #include "unordered_map"
-#include "vector"
+#include <vector>
 #include "CallsignExtractor.h"
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <utility>
 #include <string>
@@ -12,21 +13,10 @@ using namespace std;
 
 CallsignExtractor::CallsignExtractor(string wordSeq)
 {
-    extractCallSignWordSeq(wordSeq, callSignWordSeq);
-
-    callSign = "";
-
-    map<int, string> callSignElementMap;
-    findAndAddToMap(callSignWordSeq, nato.lettersToNato, callSignElementMap);
-    findAndAddToMap(callSignWordSeq, nato.numbersToNatto, callSignElementMap);
-    findAndAddToMap(callSignWordSeq, nato.numbersToNatoMultipleDigits, callSignElementMap);
-    findAndAddToMap(callSignWordSeq, nato.designators, callSignElementMap);
-
+    extractCallSignWordSeq(wordSeq, callSignWordSeq, notCallSignWordSeq);
+    findAndAddToMap(callSignWordSeq, callSignElementMap);
     combineMapToCallSign(callSignElementMap, callSign);
-    if (callSign.length() == 0)
-    {
-        callSign = "NO_CALLSIGN";
-    }
+    extractNumberFromNotCallSign(notCallSignWordSeq, numberFromNotCallSign);
 };
 
 CallsignExtractor::CallsignExtractor(vector<string> wordSeqs)
@@ -36,6 +26,8 @@ CallsignExtractor::CallsignExtractor(vector<string> wordSeqs)
         CallsignExtractor temp(i);
         callSigns.push_back(temp.getCallSign());
         callSignWordSeqs.push_back(temp.getCallSignWordSeq());
+        notCallSignWordSeqs.push_back(temp.getNotCallSignWordSeq());
+        numberFromNotCallSigns.push_back(temp.getNumberFromNotCallSign());
     }
 };
 
@@ -54,6 +46,23 @@ void CallsignExtractor::push_front_String(string &str1, string str2)
         str2.push_back(str1[i]);
     }
     str1 = str2;
+}
+
+void CallsignExtractor::extractNumberFromNotCallSign(string str, vector<string> &toAdd)
+{
+    NumberExtractor numbExtract(str);
+    for (int i = 0; i < numbExtract.getListOfNumberExtracted().size(); i++)
+    {
+        toAdd.push_back(numbExtract.getListOfNumberExtracted()[i]);
+    }
+}
+
+void CallsignExtractor::findAndAddToMap(string stringToFind, map<int, string> &mapToAdd)
+{
+    findAndAddToMap(stringToFind, nato.lettersToNato, mapToAdd);
+    findAndAddToMap(stringToFind, nato.numbersToNatto, mapToAdd);
+    findAndAddToMap(stringToFind, nato.numbersToNatoMultipleDigits, mapToAdd);
+    findAndAddToMap(stringToFind, nato.designators, mapToAdd);
 }
 
 void CallsignExtractor::findAndAddToMap(string stringToFind, unordered_map<string, vector<string>> mapToFind, map<int, string> &mapToAdd)
@@ -119,33 +128,92 @@ void CallsignExtractor::combineMapToCallSign(map<int, string> combineMap, string
         }
     }
 
+    // when meet @triple
     if (combined.find("@") != -1)
     {
         combined = combined.substr(0, combined.find("@@@")) + combined.at(combined.find("@@@") + 3) + combined.at(combined.find("@@@") + 3) + combined.substr(combined.find("@@@") + 3, combined.length());
     }
+
+    if (combined.length() == 0)
+        combined = "NO_CALLSIGN";
 };
 
-void CallsignExtractor::extractCallSignWordSeq(string wordSeq, string &callSignWordSeq)
+template <typename OutputIterator>
+void getWord(const std::string &s, OutputIterator out)
 {
-    for (auto &&i : nato.devider)
+    istringstream wordStream(s);
+    string word;
+    while (wordStream >> word)
     {
-        vector<size_t> positions;
-        size_t pos = wordSeq.find(i.second, 0);
-        while (pos != string::npos)
+        *out = word;
+        ++out;
+    }
+}
+
+auto getWordVector(std::string const &s)
+{
+    std::vector<std::string> results;
+    getWord(s, back_inserter(results));
+    return results;
+}
+
+void CallsignExtractor::extractCallSignWordSeq(string wordSeq, string &callSignWordSeq, string &notCallSignWordSeq)
+{
+    std::vector<std::string> wordVector = getWordVector(wordSeq);
+    bool endRecodeCallSignWordSeq = false;
+    for (int i = 0; i < wordVector.size(); i++)
+    {
+        if (!findWordInNato(wordVector[i]))
         {
-            positions.push_back(pos);
-            pos = wordSeq.find(i.second, pos + 1);
+            endRecodeCallSignWordSeq = true;
         }
 
-        if (positions.size() != 0)
+        if (!endRecodeCallSignWordSeq)
         {
-            auto it = min_element(std::begin(positions), std::end(positions));
-            callSignWordSeq = wordSeq.substr(0, static_cast<int>(*it));
-            break;
-        };
-        callSignWordSeq = wordSeq;
+            callSignWordSeq = callSignWordSeq + " " + wordVector[i];
+        }
+        else
+        {
+            notCallSignWordSeq = notCallSignWordSeq + " " + wordVector[i];
+        }
     }
 };
+
+bool CallsignExtractor::findWordInNato(string word)
+{
+    for (auto &&i : nato.lettersToNato)
+    {
+        if (word == i.second)
+        {
+            return true;
+        }
+    }
+    for (auto &&i : nato.numbersToNatto)
+    {
+        if (word == i.second)
+        {
+            return true;
+        }
+    }
+    for (auto &&i : nato.numbersToNatoMultipleDigits)
+    {
+        if (word == i.second)
+        {
+            return true;
+        }
+    }
+    for (auto &&i : nato.designators)
+    {
+        for (int j = 0; j < i.second.size(); j++)
+        {
+            if (word == i.second[j])
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 string CallsignExtractor::getCallSign()
 {
@@ -162,9 +230,29 @@ string CallsignExtractor::getCallSignWordSeq()
     return callSignWordSeq;
 };
 
+string CallsignExtractor::getNotCallSignWordSeq()
+{
+    return notCallSignWordSeq;
+};
+
 vector<string> CallsignExtractor::getCallSignWordSeqs()
 {
     return callSignWordSeqs;
+};
+
+vector<string> CallsignExtractor::getNotCallSignWordSeqs()
+{
+    return notCallSignWordSeqs;
+};
+
+vector<string> CallsignExtractor::getNumberFromNotCallSign()
+{
+    return numberFromNotCallSign;
+};
+
+vector<vector<string>> CallsignExtractor::getNumberFromNotCallSigns()
+{
+    return numberFromNotCallSigns;
 };
 
 CallsignExtractor::~CallsignExtractor()
