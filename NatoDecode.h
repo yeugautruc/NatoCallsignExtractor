@@ -78,6 +78,7 @@ public:
         {"C", {"charly"}},
         {"W", {"whisky"}},
         {"Z", {"zoulou"}},
+        {"X", {"xray"}},
         {"ABP", {"b_air"}},
         {"ACA", {"canada"}},
         {"AFR", {"air_france"}},
@@ -112,7 +113,8 @@ public:
         {"AUA", {"austrian", "austrian airlines"}},
         {"MHV", {"snowcap", "snow cap"}},
         {"NLY", {"flyniki", "fly niki", "fly_niki", "niki"}},
-        {"@@@", {"triple"}}};
+        {"@@@", {"triple"}},
+        {"@@", {"double"}}};
 
     const unordered_map<string, string> devider = {
         {"HEADING", "heading"},
@@ -121,7 +123,7 @@ public:
         {"EXPECT", "expect"},
         {"DIRECT_TO", "direct"},
         {"CORRECTION", "correction"},
-        {"CLIMB", "climb"}, 
+        {"CLIMB", "climb"},
         {"CONTACT", "contact"},
         {"MAINTAIN", "maintain"},
         {"ftITUDE", "when"},

@@ -100,7 +100,7 @@ NumberExtractor::NumberExtractor(std::string astr_WordSeq, int startIndexExtract
     for (int i = 0; unsigned(i) < unsigned(numsExtracted.size()); i++)
     {
         out = numsExtracted[i];
-        if (out != 404)
+        if (out != 404 && out != 65500)
         {
             // zeroStartNumber = false;
             switch (out)

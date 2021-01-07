@@ -29,6 +29,8 @@ private:
     void extractCallSignWordSeq(string wordSeq, string &callSignWordSeq, string &notCallSignWordSeq);
     NatoDecode nato;
     bool findWordInNato(string word);
+    bool findNumberInNato(string word);
+    bool findWordInNatoWithoutNumber(string word);
 
 public:
     CallsignExtractor(string wordSeq);

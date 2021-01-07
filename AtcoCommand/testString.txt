@@ -1,5 +1,5 @@
 shortTest.txt
-The top20 type occurences specified in shortTest.txt
+The top20 type occurences specified in ./AtcoCommand/shortTest.txt
 1.          NO_CONCEPT:   1
          INIT_RESPONSE:   1
                DESCEND:   1

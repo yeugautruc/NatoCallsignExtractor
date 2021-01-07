@@ -129,9 +129,13 @@ void CallsignExtractor::combineMapToCallSign(map<int, string> combineMap, string
     }
 
     // when meet @triple
-    if (combined.find("@") != -1)
+    if (combined.find("@@@") != -1)
     {
         combined = combined.substr(0, combined.find("@@@")) + combined.at(combined.find("@@@") + 3) + combined.at(combined.find("@@@") + 3) + combined.substr(combined.find("@@@") + 3, combined.length());
+    }
+    else if (combined.find("@@") != -1)
+    {
+        combined = combined.substr(0, combined.find("@@")) + combined.at(combined.find("@@") + 2) + combined.substr(combined.find("@@") + 2, combined.length());
     }
 
     if (combined.length() == 0)
@@ -160,22 +164,95 @@ auto getWordVector(std::string const &s)
 void CallsignExtractor::extractCallSignWordSeq(string wordSeq, string &callSignWordSeq, string &notCallSignWordSeq)
 {
     std::vector<std::string> wordVector = getWordVector(wordSeq);
-    bool endRecodeCallSignWordSeq = false;
+
+    bool notFoundCallSign = true;
     for (int i = 0; i < wordVector.size(); i++)
     {
-        if (!findWordInNato(wordVector[i]))
+        if (findWordInNatoWithoutNumber(wordVector[i]))
         {
-            endRecodeCallSignWordSeq = true;
+            notFoundCallSign = false;
+        }
+        if (i < wordVector.size() - 1)
+        {
+            if (findWordInNatoWithoutNumber(wordVector[i] + " " + wordVector[i + 1]))
+            {
+                notFoundCallSign = false;
+            }
+        }
+    }
+    if (notFoundCallSign)
+    {
+        notCallSignWordSeq = wordSeq;
+        return;
+    }
+
+    std::vector<std::string> notCallsignVector;
+    bool endRecordeCallSignWordSeq = false;
+    bool startRecordCallSignWordSeq = false;
+    for (int i = 0; i < wordVector.size(); i++)
+    {
+        if (findWordInNato(wordVector[i]))
+        {
+            startRecordCallSignWordSeq = true;
         }
 
-        if (!endRecodeCallSignWordSeq)
+        if (i < wordVector.size() - 1)
+        {
+            if (findWordInNato(wordVector[i] + " " + wordVector[i + 1]))
+            {
+                startRecordCallSignWordSeq = true;
+                callSignWordSeq = callSignWordSeq + " " + wordVector[i] + " " + wordVector[i + 1];
+                i++;
+                continue;
+            }
+        }
+
+        if (wordVector[i] == "correction")
+        {
+            callSignWordSeq = "";
+            notCallsignVector.push_back(wordVector[i]);
+            startRecordCallSignWordSeq = false;
+            continue;
+        }
+
+        if (startRecordCallSignWordSeq && !findWordInNato(wordVector[i]))
+        {
+            endRecordeCallSignWordSeq = true;
+        }
+
+        if (startRecordCallSignWordSeq && !endRecordeCallSignWordSeq)
         {
             callSignWordSeq = callSignWordSeq + " " + wordVector[i];
         }
-        else
+        else if (!findWordInNatoWithoutNumber(wordVector[i]))
         {
-            notCallSignWordSeq = notCallSignWordSeq + " " + wordVector[i];
+            notCallsignVector.push_back(wordVector[i]);
         }
+    }
+
+    // extract not call sign from notCallsignVector
+    for (int i = 0; i < notCallsignVector.size(); i++)
+    {
+        if (i > 1)
+        {
+            if (notCallsignVector[i] == "correction" && findNumberInNato(notCallsignVector[i - 1]))
+            {
+                for (int j = i - 1; j > 0; j--)
+                {
+                    if (findNumberInNato(notCallsignVector[j]))
+                    {
+                        notCallsignVector.erase(notCallsignVector.begin() + j);
+                    }
+                    else
+                        break;
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < notCallsignVector.size(); i++)
+    {
+        notCallSignWordSeq = notCallSignWordSeq + " " + notCallsignVector[i];
     }
 };
 
@@ -202,6 +279,49 @@ bool CallsignExtractor::findWordInNato(string word)
             return true;
         }
     }
+    for (auto &&i : nato.designators)
+    {
+        for (int j = 0; j < i.second.size(); j++)
+        {
+            if (word == i.second[j])
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool CallsignExtractor::findNumberInNato(string word)
+{
+
+    for (auto &&i : nato.numbersToNatto)
+    {
+        if (word == i.second)
+        {
+            return true;
+        }
+    }
+    for (auto &&i : nato.numbersToNatoMultipleDigits)
+    {
+        if (word == i.second)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool CallsignExtractor::findWordInNatoWithoutNumber(string word)
+{
+    for (auto &&i : nato.lettersToNato)
+    {
+        if (word == i.second)
+        {
+            return true;
+        }
+    }
+
     for (auto &&i : nato.designators)
     {
         for (int j = 0; j < i.second.size(); j++)

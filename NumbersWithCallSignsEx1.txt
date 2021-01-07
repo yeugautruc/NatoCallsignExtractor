@@ -1,0 +1,19 @@
+2019-02-15__11-32-02-00:
+    oscar echo india november kilo direct whisky whisky nine eight five
+    OEINK DIRECT TO WW985
+2019-02-15__11-33-02-00:
+    good morning lufthansa one two bravo descend eight zero
+    DLH12B DESCEND 80 none
+2019-02-15__11-34-02-00:
+    gruess gott ryan_air seven seven delta kilo in radar contact
+    RYR77DK INIT RESPONSE
+2019-02-15__11-35-02-00:
+    standby
+    NO CALLSIGN NO CONCEPT
+2019-02-15__11-37-02-00:
+    gruess gott lupus one one zero expect ils approach three four
+    AYYIIO EXPECT ILS 34
+2019-02-15__11-38-02-00:
+    gruess gott austrian seven seven seven sierra identified climb flight level two three zero
+    AUA777S INIT RESPONSE
+    AUA777S CLIMB 230 FL

@@ -224,7 +224,6 @@ AssignmentOperatorDynOcurrenceArrayTest		check if assignment operator of dynComm
 		{
 			return false;
 		}
-		cout << "Test file exist                                OK" << endl;
 		return true;
 	};
 
@@ -232,7 +231,6 @@ AssignmentOperatorDynOcurrenceArrayTest		check if assignment operator of dynComm
 	{
 		if (testString.find(input.getDynAtcoCommands().getElementArray(0).getFormattedDateTime().toString().substr(2, input.getDynAtcoCommands().getElementArray(0).getFormattedDateTime().toString().length() - 4)) != -1)
 		{
-			cout << "Test split                                     OK" << endl;
 			return true;
 		}
 		return false;
@@ -242,7 +240,6 @@ AssignmentOperatorDynOcurrenceArrayTest		check if assignment operator of dynComm
 	{
 		if (testString.find(input.getTopCommands(20)) != -1)
 		{
-			cout << "Test top occurences method                     OK" << endl;
 			return true;
 		}
 		return false;
@@ -275,7 +272,6 @@ Check if all elements has a new word sequence value.*/
 			}
 		}
 		delete[] a; // Release memory
-		cout << "Test resize AtcoCommand method                 OK" << endl;
 		return true;
 	};
 
@@ -306,7 +302,6 @@ Check if all elements has a new value.*/
 			}
 		}
 		delete[] o; // Release memory
-		cout << "Test resize Ocurrence method                   OK" << endl;
 		return true;
 	};
 
@@ -324,7 +319,6 @@ Check if more than 6 commands are read*/
 		};
 		if (amountOfCommand > 6)
 		{
-			cout << "Test can read more than 6 commands             OK" << endl;
 			return true;
 		}
 		return false;
@@ -363,7 +357,6 @@ but copy content is not correct, then crash test make no sense)*/
 		{
 			return false;
 		}
-		cout << "Test copy constructor DynCommandArray          OK" << endl;
 		return true;
 	};
 
@@ -400,7 +393,6 @@ but copy content is not correct, then crash test make no sense)*/
 		{
 			return false;
 		}
-		cout << "Test copy constructor DynAtcoCommandArray      OK" << endl;
 		return true;
 	};
 
@@ -437,7 +429,6 @@ but copy content is not correct, then crash test make no sense)*/
 		{
 			return false;
 		}
-		cout << "Test copy constructor DynOcurrenceArray        OK" << endl;
 		return true;
 	};
 
@@ -479,7 +470,6 @@ of d2 is correct assigned from d1 and have same size with d1.*/
 				return false;
 			};
 		}
-		cout << "Test assignment operator DynCommandArray       OK" << endl;
 		return true;
 	};
 
@@ -521,7 +511,6 @@ of d2 is correct assigned from d1 and have same size with d1.*/
 				return false;
 			};
 		}
-		cout << "Test assignment operator DynAtcoCommandArray   OK" << endl;
 		return true;
 	};
 
@@ -563,16 +552,16 @@ of d2 is correct assigned from d1 and have same size with d1.*/
 				return false;
 			};
 		}
-		cout << "Test assignment operator DynOcurrenceArray     OK" << endl;
 		return true;
 	};
 
 	// Run all tests
-	int runTests(string file)
+	int runAllTests()
 	{
 		UltilType test;
-		string testFileURL = "shortTest.txt";
-		string testString = readTextFile("testString.txt");
+		string testFileURL = "./AtcoCommand/shortTest.txt";
+		string testString = readTextFile("./AtcoCommand/testString.txt");
+		string file = "./AtcoCommand/longTest.txt";
 
 		// Test if testString is read
 		if (testString.length() == 0)
@@ -672,8 +661,6 @@ of d2 is correct assigned from d1 and have same size with d1.*/
 		}
 
 		// Print out result if all test passed.
-		system("Color 0A");
-		cout << "\n    Cool! All tests passed." << endl;
 		return 1;
 	};
 
@@ -685,19 +672,17 @@ of d2 is correct assigned from d1 and have same size with d1.*/
 	ReadAtCoCommand(string expect)
 	{
 
-		string defaultOpenFile = "./AtcoCommand/longTest.txt";
-
 		// Check if input parameter require test
 		if (expect == "--test")
 		{
-			runTests(defaultOpenFile);
+			runAllTests();
 		}
 		// Check if input parameter require stress test
 		else if (expect == "--stresstest")
 		{
 			while (1)
 			{
-				runTests(defaultOpenFile);
+				runAllTests();
 			}
 		}
 		else
