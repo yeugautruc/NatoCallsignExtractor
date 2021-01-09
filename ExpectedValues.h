@@ -1,8 +1,8 @@
 class ExpectedValues
 {
 private:
-    int expectedInt;
-    double expectedDouble;
+    int expectedInt{};
+    double expectedDouble{};
 
 public:
     ExpectedValues(int i)

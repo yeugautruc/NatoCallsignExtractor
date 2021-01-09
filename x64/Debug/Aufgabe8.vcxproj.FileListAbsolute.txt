@@ -1,0 +1,2 @@
+D:\Aufgabe4Cplusplus\Aufgabe8\NatoCallsignExtractor\x64\Debug\Aufgabe8.exe
+D:\Aufgabe4Cplusplus\Aufgabe8\NatoCallsignExtractor\x64\Debug\Aufgabe8.pdb
