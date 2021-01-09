@@ -115,17 +115,4 @@ public:
         {"NLY", {"flyniki", "fly niki", "fly_niki", "niki"}},
         {"@@@", {"triple"}},
         {"@@", {"double"}}};
-
-    const unordered_map<string, string> devider = {
-        {"HEADING", "heading"},
-        {"CLEARED", "cleared"},
-        {"DESCEND", "descend"},
-        {"EXPECT", "expect"},
-        {"DIRECT_TO", "direct"},
-        {"CORRECTION", "correction"},
-        {"CLIMB", "climb"},
-        {"CONTACT", "contact"},
-        {"MAINTAIN", "maintain"},
-        {"ftITUDE", "when"},
-    };
 };

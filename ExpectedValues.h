@@ -1,3 +1,4 @@
+#include <string>
 class ExpectedValues
 {
 private:
@@ -38,5 +39,18 @@ public:
     void setExpectedDouble(double d)
     {
         expectedDouble = d;
+    }
+
+    string toString()
+    {
+        if (expectedInt != 0)
+        {
+            return to_string(expectedInt);
+        }
+        if (expectedDouble != 0)
+        {
+            return to_string(expectedInt);
+        }
+        return "";
     }
 };

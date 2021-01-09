@@ -187,7 +187,7 @@ bool ReadUtteranceExtractNumbersTest01()
     return true;
 }
 
-bool ReadUtteranceExtractNumbers(string fileName, vector<ExpectedValues> container, bool printOut)
+bool ReadUtteranceExtractNumbers(string fileName, vector<vector<ExpectedValues>> container, bool printOut)
 {
     ReadAtCoCommand data(fileName);
     if (data.runAllTests() != 1)
@@ -224,7 +224,7 @@ bool ReadUtteranceExtractNumbers(string fileName, vector<ExpectedValues> contain
             cout << "\nNumber extracted:   ";
             if (callSignEx.getNumberFromNotCallSigns()[i].size() == 0)
             {
-                cout_with_color(YELLOW, "No number extracted");
+                cout_with_color(YELLOW, "No number extracted   ");
             }
             for (int j = 0; j < callSignEx.getNumberFromNotCallSigns()[i].size(); j++)
             {
@@ -232,6 +232,19 @@ bool ReadUtteranceExtractNumbers(string fileName, vector<ExpectedValues> contain
                 if (j != callSignEx.getNumberFromNotCallSigns()[i].size() - 1)
                     cout << ",  ";
             }
+
+            cout << "     Expected: ";
+            if (container[i].size() == 0)
+            {
+                cout_with_color(PINK, "No number expected");
+            }
+            for (int k = 0; k < container[i].size(); k++)
+            {
+                cout_with_color(PINK, container[i][k].toString());
+                if (k != container[i].size() - 1)
+                    cout << ",  ";
+            }
+
             cout << endl;
             cout << endl;
         }
@@ -242,10 +255,28 @@ bool ReadUtteranceExtractNumbers(string fileName, vector<ExpectedValues> contain
 int main()
 {
     string fileName = "NumbersWithCallSignsEx1.txt";
+    cout << "       ReadUtteranceCheckCallSign file NumbersWithCallSignsEx1.txt: \n ";
     ReadUtteranceCheckCallSign(fileName, true);
+    cout << "\n\n\n";
+
+    cout << "       ReadUtteranceExtractNumbers file NumbersWithCallSignsEx1.txt: \n ";
+    ReadUtteranceExtractNumbers(fileName,
+                                vector<vector<ExpectedValues>>{vector<ExpectedValues>{ExpectedValues(985)},
+                                                               vector<ExpectedValues>{ExpectedValues(80)},
+                                                               vector<ExpectedValues>{},
+                                                               vector<ExpectedValues>{},
+                                                               vector<ExpectedValues>{ExpectedValues(34)},
+                                                               vector<ExpectedValues>{ExpectedValues(230)}},
+                                true);
+    cout << "\n\n\n";
+
+    cout << "       ReadUtteranceCheckCallSign file CallSignCorrection.txt: \n ";
     ReadUtteranceCheckCallSign("CallSignCorrection.txt", true);
-    vector<ExpectedValues> container = {};
-    container.push_back(ExpectedValues(2));
-    ReadUtteranceExtractNumbers("NumberCorrection.txt", container, true);
-    ReadUtteranceExtractNumbers(fileName, container, true);
+    cout << "\n\n\n";
+
+    cout << "       ReadUtteranceExtractNumbers file NumberCorrection.txt: \n ";
+    ReadUtteranceExtractNumbers("NumberCorrection.txt",
+                                vector<vector<ExpectedValues>>{vector<ExpectedValues>{ExpectedValues(4000), ExpectedValues(1012)},
+                                                               vector<ExpectedValues>{ExpectedValues(4000), ExpectedValues(10), ExpectedValues(7000)}},
+                                true);
 }
