@@ -112,8 +112,8 @@ bool ReadUtteranceCheckCallSign(string fileName, bool printOut)
         {
             cout << "Keyword Seq:";
             cout_with_color(GREEN, wordSeqs[i]);
-            // cout << "\nCallsign Seq:";
-            // cout_with_color(PINK, callSignEx.getCallSignWordSeqs()[i]);
+            cout << "\nCallsign Seq:";
+            cout_with_color(PINK, callSignEx.getCallSignWordSeqs()[i]);
             cout << "\nCallsign extracted:   ";
             cout_with_color(YELLOW, callSignEx.getCallSigns()[i] + "\n");
             cout << endl;

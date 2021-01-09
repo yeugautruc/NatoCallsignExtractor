@@ -207,6 +207,17 @@ void CallsignExtractor::extractCallSignWordSeq(string wordSeq, string &callSignW
             }
         }
 
+        if (i < wordVector.size() - 4)
+        {
+            if (findWordInNato(wordVector[i] + " " + wordVector[i + 1] + " " + wordVector[i + 2] + " " + wordVector[i + 3]))
+            {
+                startRecordCallSignWordSeq = true;
+                callSignWordSeq = callSignWordSeq + " " + wordVector[i] + " " + wordVector[i + 1] + " " + wordVector[i + 2] + " " + wordVector[i + 3];
+                i += 3;
+                continue;
+            }
+        }
+
         if (wordVector[i] == "correction")
         {
             callSignWordSeq = "";
