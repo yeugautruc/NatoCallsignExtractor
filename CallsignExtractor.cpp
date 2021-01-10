@@ -133,6 +133,7 @@ void CallsignExtractor::combineMapToCallSign(map<int, string> combineMap, string
     {
         combined = combined.substr(0, combined.find("@@@")) + combined.at(combined.find("@@@") + 3) + combined.at(combined.find("@@@") + 3) + combined.substr(combined.find("@@@") + 3, combined.length());
     }
+    // when meet @double
     else if (combined.find("@@") != -1)
     {
         combined = combined.substr(0, combined.find("@@")) + combined.at(combined.find("@@") + 2) + combined.substr(combined.find("@@") + 2, combined.length());

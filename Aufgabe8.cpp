@@ -41,17 +41,17 @@ bool ReadUtteranceCheckCallSignTest01()
         {
             for (const auto &item : m)
             {
-                wordSeqs.push_back(item.first);
-                expecteds.push_back(item.second);
+                wordSeqs.push_back(item.first);   // get word sequences from map expected
+                expecteds.push_back(item.second); // get expected callsigns  from map expected
             }
-            testResult = testCallSignCorrectRead();
+            testResult = testCallSignCorrectRead(); // get test Result
         };
         bool testCallSignCorrectRead()
         {
             for (int i = 0; i < expecteds.size(); i++)
             {
-                CallsignExtractor temp(wordSeqs[i]);
-                if (temp.getCallSign() != expecteds[i])
+                CallsignExtractor temp(wordSeqs[i]);    // extract callsigns from word sequence
+                if (temp.getCallSign() != expecteds[i]) // compare extracted callsign and expected callsigns
                 {
                     return false;
                 }
@@ -69,8 +69,55 @@ bool ReadUtteranceCheckCallSignTest01()
         {"standby", "NO_CALLSIGN"},
         {"gruess gott lupus one one zero expect ils approach three four", "AYY110"},
         {"gruess gott austrian seven seven seven sierra identified climb flight level two three zero", "AUA777S"}};
-    testUtt t1(expectedMap);
+    testUtt t1(expectedMap); //run test with expected value is true and get result
     if (!t1.testResult)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool ReadUtteranceCheckCallSignTest02()
+{
+    struct testUtt
+    {
+        vector<string> expecteds;
+        vector<string> wordSeqs;
+        bool testResult;
+        testUtt(map<string, string> m)
+        {
+            for (const auto &item : m)
+            {
+                wordSeqs.push_back(item.first);   // get word sequences from map expected
+                expecteds.push_back(item.second); // get expected callsigns  from map expected
+            }
+            testResult = testCallSignCorrectRead(); // get test Result
+        };
+        bool testCallSignCorrectRead()
+        {
+            for (int i = 0; i < expecteds.size(); i++)
+            {
+                CallsignExtractor temp(wordSeqs[i]);    // extract callsigns from word sequence
+                if (temp.getCallSign() != expecteds[i]) // compare extracted callsign and expected callsigns
+                {
+                    return false;
+                }
+            }
+            return true;
+        };
+    };
+    map<string, string> expectedMap = {
+        {"oscar kilo tango november tango praha radar contact karlovy vary radar one one eight decimal eight five zero naslysenou", "AAAAS"},
+        {"lufthansa triple nine alfa good morning radar contact kilo is correct", "AAAAS"},
+        {"lufthansa double nine alfa good morning radar contact kilo is correct", "AAAAS"},
+        {"oscar echo india november kilo direct whisky whisky nine eight five", "AAAAS"},
+        {"good morning lufthansa one two bravo descend eight zero", "AAAAS"},
+        {"gruess gott ryan_air seven seven delta kilo in radar contact", "AAAAS"},
+        {"standby", "AAAAS"},
+        {"gruess gott lupus one one zero expect ils approach three four", "AAAAS"},
+        {"gruess gott austrian seven seven seven sierra identified climb flight level two three zero", "AAAAS"}};
+    testUtt t1(expectedMap); //run test with expected value is false and get result
+    if (t1.testResult)
     {
         return false;
     }
@@ -90,6 +137,11 @@ bool ReadUtteranceCheckCallSign(string fileName, bool printOut)
     if (!ReadUtteranceCheckCallSignTest01())
     {
         cout << "ReadUtterance test 1 failed!";
+        return false;
+    }
+    if (!ReadUtteranceCheckCallSignTest02())
+    {
+        cout << "ReadUtterance test 2 failed!";
         return false;
     }
 
@@ -134,23 +186,25 @@ bool ReadUtteranceExtractNumbersTest01()
         {
             for (const auto &item : m)
             {
-                wordSeqs.push_back(item.first);
-                numberSeqs.push_back(item.second);
+                wordSeqs.push_back(item.first);    // get word sequences from map expected
+                numberSeqs.push_back(item.second); // get expected numbers  from map expected
             }
-            testResult = testCallSignCorrectRead(m);
+            testResult = testNumberCorrectRead(m); // get test Result
         };
-        bool testCallSignCorrectRead(map<string, vector<ExpectedValues>> m)
+        bool testNumberCorrectRead(map<string, vector<ExpectedValues>> m)
         {
             for (int i = 0; i < numberSeqs.size(); i++)
             {
-                CallsignExtractor temp(wordSeqs[i]);
+                CallsignExtractor temp(wordSeqs[i]); // extract numbers from word sequence
+                if (temp.getNumberFromNotCallSign().size() != m.at(wordSeqs[i]).size())
+                    return false; // if amount of number extracted from each word sequence is not the same as expected
                 for (int j = 0; j < temp.getNumberFromNotCallSign().size(); j++)
                 {
-                    if (temp.getNumberFromNotCallSign()[j].find(".") != -1)
+                    if (temp.getNumberFromNotCallSign()[j].find(".") != -1) // if number extracted is double
                     {
                         if (to_string(m.at(wordSeqs[i])[j].getExpectedDouble()).find(temp.getNumberFromNotCallSign()[j]) == -1)
-                            return false;
-                    }
+                            return false; // compare if expected as the same with extracted
+                    }                     // if number extracted is integer then compare if expected as the same with extracted
                     else if (to_string(m.at(wordSeqs[i])[j].getExpectedInt()) != temp.getNumberFromNotCallSign()[j])
                         return false;
                 }
@@ -179,8 +233,74 @@ bool ReadUtteranceExtractNumbersTest01()
                         vector<ExpectedValues>{ExpectedValues(23), ExpectedValues(21), ExpectedValues(13), ExpectedValues(12)});
     expectedMap.emplace("contact director one one nine eight two five goodbye",
                         vector<ExpectedValues>{ExpectedValues(119825)});
-    testUtt t1(expectedMap);
+    testUtt t1(expectedMap); //run test with expected value is true and get result
     if (!t1.testResult)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool ReadUtteranceExtractNumbersTest02()
+{
+    struct testUtt
+    {
+        vector<string> wordSeqs;
+        vector<vector<ExpectedValues>> numberSeqs;
+        bool testResult;
+        testUtt(map<string, vector<ExpectedValues>> m)
+        {
+            for (const auto &item : m)
+            {
+                wordSeqs.push_back(item.first);    // get word sequences from map expected
+                numberSeqs.push_back(item.second); // get expected numbers  from map expected
+            }
+            testResult = testNumberCorrectRead(m); // get test Result
+        };
+        bool testNumberCorrectRead(map<string, vector<ExpectedValues>> m)
+        {
+            for (int i = 0; i < numberSeqs.size(); i++)
+            {
+                CallsignExtractor temp(wordSeqs[i]); // extract numbers from word sequence
+                if (temp.getNumberFromNotCallSign().size() != m.at(wordSeqs[i]).size())
+                    return false; // if amount of number extracted from each word sequence is not the same as expected
+                for (int j = 0; j < temp.getNumberFromNotCallSign().size(); j++)
+                {
+                    if (temp.getNumberFromNotCallSign()[j].find(".") != -1) // if number extracted is double
+                    {
+                        if (to_string(m.at(wordSeqs[i])[j].getExpectedDouble()).find(temp.getNumberFromNotCallSign()[j]) == -1)
+                            return false; // compare if expected as the same with extracted
+                    }                     // if number extracted is integer then compare if expected as the same with extracted
+                    else if (to_string(m.at(wordSeqs[i])[j].getExpectedInt()) != temp.getNumberFromNotCallSign()[j])
+                        return false;
+                }
+            }
+            return true;
+        };
+    };
+
+    map<string, vector<ExpectedValues>> expectedMap;
+    expectedMap.emplace("dobry den sky_travel five eight juliett ruzyne radar radar contact on present"
+                        " heading descend four thousand feet qnh one zero two two",
+                        vector<ExpectedValues>{ExpectedValues(1000), ExpectedValues(1000)});
+    expectedMap.emplace("oscar kilo victor india kilo roger descend three thousand five hundred feet"
+                        " squawk seven thousand",
+                        vector<ExpectedValues>{ExpectedValues(1000), ExpectedValues(1000)});
+    expectedMap.emplace("snow cap two hundred one descend eight thousand feet",
+                        vector<ExpectedValues>{ExpectedValues(1000)});
+    expectedMap.emplace("austrian three nine two papa descend altitude one zero thousand"
+                        " qnh one zero zero three",
+                        vector<ExpectedValues>{ExpectedValues(1000), ExpectedValues(1000)});
+    expectedMap.emplace("fly_niki six hundred zulu contact tower now"
+                        " one two three point eight servus",
+                        vector<ExpectedValues>{ExpectedValues(100.10)});
+    expectedMap.emplace("negative sir temperature two three instead of two one "
+                        "and dew point one three instead of one two",
+                        vector<ExpectedValues>{ExpectedValues(1000), ExpectedValues(1000)});
+    expectedMap.emplace("contact director one one nine eight two five goodbye",
+                        vector<ExpectedValues>{ExpectedValues(1000)});
+    testUtt t1(expectedMap); //run test with expected value is false and get result
+    if (t1.testResult)
     {
         return false;
     }
@@ -199,6 +319,12 @@ bool ReadUtteranceExtractNumbers(string fileName, vector<vector<ExpectedValues>>
     if (!ReadUtteranceExtractNumbersTest01())
     {
         cout << "ReadUtteranceExtractNumbersTest01 ocurred error!";
+        return false;
+    }
+
+    if (!ReadUtteranceExtractNumbersTest01())
+    {
+        cout << "ReadUtteranceExtractNumbersTest02 ocurred error!";
         return false;
     }
 
@@ -255,11 +381,11 @@ bool ReadUtteranceExtractNumbers(string fileName, vector<vector<ExpectedValues>>
 int main()
 {
     string fileName = "NumbersWithCallSignsEx1.txt";
-    cout << "       ReadUtteranceCheckCallSign file NumbersWithCallSignsEx1.txt: \n ";
+    cout << "       ReadUtteranceCheckCallSign file NumbersWithCallSignsEx1.txt: \n";
     ReadUtteranceCheckCallSign(fileName, true);
     cout << "\n\n\n";
 
-    cout << "       ReadUtteranceExtractNumbers file NumbersWithCallSignsEx1.txt: \n ";
+    cout << "       ReadUtteranceExtractNumbers file NumbersWithCallSignsEx1.txt: \n";
     ReadUtteranceExtractNumbers(fileName,
                                 vector<vector<ExpectedValues>>{vector<ExpectedValues>{ExpectedValues(985)},
                                                                vector<ExpectedValues>{ExpectedValues(80)},
@@ -270,11 +396,11 @@ int main()
                                 true);
     cout << "\n\n\n";
 
-    cout << "       ReadUtteranceCheckCallSign file CallSignCorrection.txt: \n ";
+    cout << "       ReadUtteranceCheckCallSign file CallSignCorrection.txt: \n";
     ReadUtteranceCheckCallSign("CallSignCorrection.txt", true);
     cout << "\n\n\n";
 
-    cout << "       ReadUtteranceExtractNumbers file NumberCorrection.txt: \n ";
+    cout << "       ReadUtteranceExtractNumbers file NumberCorrection.txt: \n";
     ReadUtteranceExtractNumbers("NumberCorrection.txt",
                                 vector<vector<ExpectedValues>>{vector<ExpectedValues>{ExpectedValues(4000), ExpectedValues(1012)},
                                                                vector<ExpectedValues>{ExpectedValues(4000), ExpectedValues(10), ExpectedValues(7000)}},
