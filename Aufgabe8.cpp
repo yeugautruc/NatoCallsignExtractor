@@ -124,7 +124,7 @@ bool ReadUtteranceCheckCallSignTest02()
     return true;
 }
 
-bool ReadUtteranceCheckCallSign(string fileName, bool printOut)
+bool ReadUtteranceCheckCallSign(string fileName, vector<string> expecteds, bool printOut)
 {
 
     ReadAtCoCommand data(fileName);
@@ -157,6 +157,12 @@ bool ReadUtteranceCheckCallSign(string fileName, bool printOut)
 
     // input wordSeqs to extract
     CallsignExtractor callSignEx(wordSeqs);
+    bool result = true;
+    for (int t = 0; t < callSignEx.getCallSigns().size(); t++)
+    {
+        if (callSignEx.getCallSigns()[t] != expecteds[t])
+            result = false;
+    }
 
     if (printOut)
     {
@@ -164,15 +170,18 @@ bool ReadUtteranceCheckCallSign(string fileName, bool printOut)
         {
             cout << "Keyword Seq:";
             cout_with_color(GREEN, wordSeqs[i]);
-            cout << "\nCallsign Seq:";
-            cout_with_color(PINK, callSignEx.getCallSignWordSeqs()[i]);
+            // cout << "\nCallsign Seq:";
+            // cout_with_color(PINK, callSignEx.getCallSignWordSeqs()[i]);
             cout << "\nCallsign extracted:   ";
-            cout_with_color(YELLOW, callSignEx.getCallSigns()[i] + "\n");
+            cout_with_color(YELLOW, callSignEx.getCallSigns()[i]);
+            cout << "  Expected: ";
+            cout_with_color(PINK, expecteds[i]);
+            cout << endl;
             cout << endl;
         }
     }
 
-    return true;
+    return result;
 }
 
 bool ReadUtteranceExtractNumbersTest01()
@@ -382,7 +391,7 @@ int main()
 {
     string fileName = "NumbersWithCallSignsEx1.txt";
     cout << "       ReadUtteranceCheckCallSign file NumbersWithCallSignsEx1.txt: \n";
-    ReadUtteranceCheckCallSign(fileName, true);
+    ReadUtteranceCheckCallSign(fileName, vector<string>{"OEINK", "DLH12B", "RYR77DK", "NO_CALLSIGN", "AYY110", "AUA777S"}, true);
     cout << "\n\n\n";
 
     cout << "       ReadUtteranceExtractNumbers file NumbersWithCallSignsEx1.txt: \n";
@@ -397,7 +406,7 @@ int main()
     cout << "\n\n\n";
 
     cout << "       ReadUtteranceCheckCallSign file CallSignCorrection.txt: \n";
-    ReadUtteranceCheckCallSign("CallSignCorrection.txt", true);
+    ReadUtteranceCheckCallSign("CallSignCorrection.txt", vector<string>{"ODINK", "BAW12B", "AYY77DK", "NO_CALLSIGN"}, true);
     cout << "\n\n\n";
 
     cout << "       ReadUtteranceExtractNumbers file NumberCorrection.txt: \n";
