@@ -1,0 +1,35 @@
+2016-10-02__07-01-18-13:
+   oscar kilo tango november tango praha radar contact karlovy vary radar one one eight decimal eight five zero naslysenou
+   OKTNT INIT_RESPONSE
+   OKTNT CONTACT KARLOVY_VARY_RADAR
+   OKTNT CONTACT_FREQUENCY 118.850
+2016-10-02__07-01-53-13:
+   CSA nine zero eight climb flight level one two zero
+   CSA908 CLIMB 120 FL
+2016-10-02__07-02-14-13:
+   KLM one three five two contact praha radar one two zero decimal zero seven five naslysenou bye bye
+   KLM1352 CONTACT RADAR
+   KLM1352 CONTACT_FREQUENCY 120.075
+2016-10-02__07-02-56-13:
+   CSA nine zero eight climb flight level three five zero
+   CSA908 CLIMB 350 FL
+2016-10-02__07-48-49-13:
+   tarom two two six alfa praha radar report present altitude
+   ROT226A NO_CONCEPT
+2016-10-02__07-48-54-13:
+   tarom two two six alfa radar radar contact correct climb altitude four thousand feet
+   ROT226A INIT_RESPONSE
+   ROT226A CLIMB 4000 ft
+2016-10-02__07-49-06-13:
+   sky_travel one two six three proceed direct papa romeo five three two
+   TVS1263 DIRECT_TO PR532 none
+2016-10-02__07-11-51-13:
+   enter air eight five two fox turn right heading zero two zero
+   ENT852F HEADING 020 RIGHT
+2016-10-02__07-12-41-13:
+   enter air eight five two papa right heading two hundred cleared ils approach runway two four
+   ENT852P HEADING 200 RIGHT
+   ENT852P CLEARED ILS 24
+2016-10-02__07-13-04-13:
+   ryan air nine seven six eight delta two one victor descend altitude two thousand five hundred feet
+   RYR9768D21V DESCEND 2500 ft

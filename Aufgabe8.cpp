@@ -5,18 +5,15 @@
 #include "CallsignExtractor.h"
 #include "ExpectedValues.h"
 #include "./AtcoCommand/ReadAtCoCommand.h"
-#include <windows.h>
 
 using namespace std;
 
-const unsigned short BLUE = 9, YELLOW = 14, PINK = 13, RED = 12, WHITE = 15, GREEN = 10, GRAY = 8;
+const unsigned short BLUE = 34, YELLOW = 33, PINK = 35, RED = 31, WHITE = 37, GREEN = 32, GRAY = 36;
 
 void cout_with_color(unsigned short color, string text)
 {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole, color);
-    cout << text;
-    SetConsoleTextAttribute(hConsole, WHITE);
+    string toPrint = "\33[1;" + std::to_string(color) + "m" + text + "\033[0m";
+    cout << toPrint;
 }
 
 bool existsTest(const string &name)
@@ -170,8 +167,10 @@ bool ReadUtteranceCheckCallSign(string fileName, vector<string> expecteds, bool 
         {
             cout << "Keyword Seq:";
             cout_with_color(GREEN, wordSeqs[i]);
-            // cout << "\nCallsign Seq:";
-            // cout_with_color(PINK, callSignEx.getCallSignWordSeqs()[i]);
+            cout << "\nCallsign Seq:";
+            cout_with_color(PINK, callSignEx.getCallSignWordSeqs()[i]);
+            cout << "\nNot Callsign Seq:";
+            cout_with_color(PINK, callSignEx.getNotCallSignWordSeqs()[i]);
             cout << "\nCallsign extracted:   ";
             cout_with_color(YELLOW, callSignEx.getCallSigns()[i]);
             cout << "  Expected: ";
@@ -375,9 +374,18 @@ bool ReadUtteranceExtractNumbers(string fileName, vector<vector<ExpectedValues>>
             }
             for (int k = 0; k < container[i].size(); k++)
             {
-                cout_with_color(PINK, container[i][k].toString());
-                if (k != container[i].size() - 1)
-                    cout << ",  ";
+                if (callSignEx.getNumberFromNotCallSigns()[i][k].find(".") != -1) // if number extracted is double
+                {
+                    cout_with_color(PINK, to_string(container[i][k].getExpectedDouble()));
+                    if (k != container[i].size() - 1)
+                        cout << ",  ";
+                }
+                else
+                {
+                    cout_with_color(PINK, to_string(container[i][k].getExpectedInt()));
+                    if (k != container[i].size() - 1)
+                        cout << ",  ";
+                }
             }
 
             cout << endl;
@@ -389,29 +397,82 @@ bool ReadUtteranceExtractNumbers(string fileName, vector<vector<ExpectedValues>>
 
 int main()
 {
-    string fileName = "NumbersWithCallSignsEx1.txt";
-    cout << "       ReadUtteranceCheckCallSign file NumbersWithCallSignsEx1.txt: \n";
-    ReadUtteranceCheckCallSign(fileName, vector<string>{"OEINK", "DLH12B", "RYR77DK", "NO_CALLSIGN", "AYY110", "AUA777S"}, true);
+    // string fileName = "NumbersWithCallSignsEx1.txt";
+    // cout << "       ReadUtteranceCheckCallSign file NumbersWithCallSignsEx1.txt: \n";
+    // ReadUtteranceCheckCallSign(fileName, vector<string>{"GTWAB1F", "GTWAB1", "TVS1263", "TVS1263", "TVS81D3", "TVS1126","TVS1126","TVS112","TVS1F2A","TVS112A","AUA666E","AUA200E","AUA7000","TVS1126"}, true);
+    // cout << "\n\n\n";
+
+    string fileName = "BigChallenges.txt";
+    cout << "       ReadUtteranceCheckCallSign file BigChallenges.txt: \n";
+    ReadUtteranceCheckCallSign(fileName, vector<string>{"GTWAB1F", "GTWAB1", "TVS1263", "TVS1263", "TVS81D3", "TVS1126", "TVS1126", "TVS112", "TVS1F2A", "TVS112A", "AUA666E", "AUA200E", "AUA7000", "TVS1126"}, true);
     cout << "\n\n\n";
 
-    cout << "       ReadUtteranceExtractNumbers file NumbersWithCallSignsEx1.txt: \n";
-    ReadUtteranceExtractNumbers(fileName,
-                                vector<vector<ExpectedValues>>{vector<ExpectedValues>{ExpectedValues(985)},
-                                                               vector<ExpectedValues>{ExpectedValues(80)},
+    string fileName2 = "CallsignExtractionBachelor.txt";
+    cout << "       ReadUtteranceCheckCallSign file CallsignExtractionBachelor.txt: \n";
+    ReadUtteranceCheckCallSign(fileName2, vector<string>{"OKTNT", "CSA908", "KLM1352", "CSA908", "ROT226A", "ROT226A", "TVS1263", "ENT852F", "ENT852P", "RYR9768D21V"}, true);
+    cout << "\n\n\n";
+
+    // string fileName3 = "CallsignExtractionMaster.txt";
+    // cout << "       ReadUtteranceCheckCallSign file CallsignExtractionMaster.txt: \n";
+    // ReadUtteranceCheckCallSign(fileName3, vector<string>{"OKTNT", "CSA908", "KLM1352", "CSA908", "ROT226A", "ROT226A", "TVS1263", "ENT852F", "DAL87DV", "GTW2F1F"}, true);
+    // cout << "\n\n\n";
+
+    // cout << "       ReadUtteranceExtractNumbers file CallsignExtractionBachelor.txt: \n";
+    // ReadUtteranceExtractNumbers("CallsignExtractionBachelor.txt",
+    //                             vector<vector<ExpectedValues>>{vector<ExpectedValues>{ExpectedValues(118.850)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(120)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(120.075)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(350)},
+    //                                                            vector<ExpectedValues>{},
+    //                                                            vector<ExpectedValues>{ExpectedValues(4000)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(532)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(20)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(200), ExpectedValues(24)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(2500)}},
+    //                             true);
+    // cout << "\n\n\n";
+
+    // cout << "       ReadUtteranceExtractNumbers file CallsignExtractionMaster.txt: \n";
+    // ReadUtteranceExtractNumbers("CallsignExtractionMaster.txt",
+    //                             vector<vector<ExpectedValues>>{vector<ExpectedValues>{ExpectedValues(118.650)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(120)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(120.075)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(150)},
+    //                                                            vector<ExpectedValues>{},
+    //                                                            vector<ExpectedValues>{ExpectedValues(4621)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(532)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(5)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(12500)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(230)}},
+    //                             true);
+    // cout << "\n\n\n";
+
+    cout << "       ReadUtteranceExtractNumbers file BigChallenges.txt: \n";
+    ReadUtteranceExtractNumbers("BigChallenges.txt",
+                                vector<vector<ExpectedValues>>{vector<ExpectedValues>{ExpectedValues(230)},
+                                                               vector<ExpectedValues>{ExpectedValues(230)},
+                                                               vector<ExpectedValues>{ExpectedValues(532)},
+                                                               vector<ExpectedValues>{ExpectedValues(532)},
+                                                               vector<ExpectedValues>{ExpectedValues(533)},
+                                                               vector<ExpectedValues>{ExpectedValues(300)},
+                                                               vector<ExpectedValues>{ExpectedValues(65)},
+                                                               vector<ExpectedValues>{ExpectedValues(1032)},
                                                                vector<ExpectedValues>{},
                                                                vector<ExpectedValues>{},
-                                                               vector<ExpectedValues>{ExpectedValues(34)},
-                                                               vector<ExpectedValues>{ExpectedValues(230)}},
+                                                               vector<ExpectedValues>{ExpectedValues(2170)},
+                                                               vector<ExpectedValues>{},
+                                                               vector<ExpectedValues>{},
+                                                               vector<ExpectedValues>{ExpectedValues(532), ExpectedValues(20)}},
                                 true);
     cout << "\n\n\n";
 
-    cout << "       ReadUtteranceCheckCallSign file CallSignCorrection.txt: \n";
-    ReadUtteranceCheckCallSign("CallSignCorrection.txt", vector<string>{"ODINK", "BAW12B", "AYY77DK", "NO_CALLSIGN"}, true);
-    cout << "\n\n\n";
+    // cout << "       ReadUtteranceCheckCallSign file CallSignCorrection.txt: \n";
+    // ReadUtteranceCheckCallSign("CallSignCorrection.txt", vector<string>{"ODINK", "BAW12B", "AYY77DK", "NO_CALLSIGN"}, true);
+    // cout << "\n\n\n";
 
-    cout << "       ReadUtteranceExtractNumbers file NumberCorrection.txt: \n";
-    ReadUtteranceExtractNumbers("NumberCorrection.txt",
-                                vector<vector<ExpectedValues>>{vector<ExpectedValues>{ExpectedValues(4000), ExpectedValues(1012)},
-                                                               vector<ExpectedValues>{ExpectedValues(4000), ExpectedValues(10), ExpectedValues(7000)}},
-                                true);
+    // cout << "       ReadUtteranceExtractNumbers file NumberCorrection.txt: \n";
+    // ReadUtteranceExtractNumbers("NumberCorrection.txt",
+    //                             vector<vector<ExpectedValues>>{vector<ExpectedValues>{ExpectedValues(4000), ExpectedValues(1012)},
+    //                                                            vector<ExpectedValues>{ExpectedValues(4000), ExpectedValues(10), ExpectedValues(7000)}},
+    //                             true);
 }

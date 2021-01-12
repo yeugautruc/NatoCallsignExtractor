@@ -175,7 +175,7 @@ void CallsignExtractor::extractCallSignWordSeq(string wordSeq, string &callSign_
         }
         if (i < wordVector.size() - 1)
         {
-            if (findWordInNatoWithoutNumber((wordVector[i]) + " " + wordVector[(i) +static_cast < unsigned __int64>(1)]))
+            if (findWordInNatoWithoutNumber((wordVector[i]) + " " + wordVector[(i) + (1)]))
             {
                 notFoundCallSign = false;
             }
@@ -199,10 +199,10 @@ void CallsignExtractor::extractCallSignWordSeq(string wordSeq, string &callSign_
 
         if (i < wordVector.size() - 1)
         {
-            if (findWordInNato(wordVector[i] + " " + wordVector[i + static_cast <unsigned __int64>(1)]))
+            if (findWordInNato(wordVector[i] + " " + wordVector[i +   (1)]))
             {
                 startRecordCallSignWordSeq = true;
-                callSign_WordSeq = callSign_WordSeq + " " + wordVector[i] + " " + wordVector[i + static_cast <unsigned __int64>(1)];
+                callSign_WordSeq = callSign_WordSeq + " " + wordVector[i] + " " + wordVector[i +   (1)];
                 i++;
                 continue;
             }
@@ -210,10 +210,10 @@ void CallsignExtractor::extractCallSignWordSeq(string wordSeq, string &callSign_
 
         if (i < wordVector.size() - 4)
         {
-            if (findWordInNato(wordVector[i] + " " + wordVector[i + static_cast <unsigned __int64>(1)] + " " + wordVector[i + static_cast <unsigned __int64>(2)] + " " + wordVector[i + static_cast <unsigned __int64>(3)]))
+            if (findWordInNato(wordVector[i] + " " + wordVector[i +   (1)] + " " + wordVector[i +   (2)] + " " + wordVector[i +   (3)]))
             {
                 startRecordCallSignWordSeq = true;
-                callSign_WordSeq = callSign_WordSeq + " " + wordVector[i] + " " + wordVector[i + static_cast <unsigned __int64>(1)] + " " + wordVector[i + static_cast <unsigned __int64>(2)] + " " + wordVector[i + static_cast <unsigned __int64>(3)];
+                callSign_WordSeq = callSign_WordSeq + " " + wordVector[i] + " " + wordVector[i +   (1)] + " " + wordVector[i +   (2)] + " " + wordVector[i +   (3)];
                 i += 3;
                 continue;
             }
@@ -247,7 +247,7 @@ void CallsignExtractor::extractCallSignWordSeq(string wordSeq, string &callSign_
     {
         if (i > 1)
         {
-            if (notCallsignVector[i] == "correction" && findNumberInNato(notCallsignVector[i - static_cast <unsigned __int64>(1)]))
+            if (notCallsignVector[i] == "correction" && findNumberInNato(notCallsignVector[i -   (1)]))
             {
                 for (int j = i - 1; j > 0; j--)
                 {

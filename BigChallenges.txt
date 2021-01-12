@@ -1,0 +1,47 @@
+2019-02-15__11-39-02-00:
+   hi united states of america alfa bravo one fox identified climb flight level two three zero
+   GTWAB1F  INIT_RESPONSE
+   GTWAB1F CLIMB 230 FL
+2019-02-16__11-39-02-00:
+   united states of america alfa bravo one climb flight level two three zero
+   GTWAB1 CLIMB 230 FL
+2016-10-02__07-49-06-13:
+   sky_travel eight correction sky_travel one two six three proceed direct papa romeo five four correction papa romeo five three two
+   TVS1263 DIRECT_TO PR532 none
+2016-10-02__08-49-06-13:
+   sky_travel eight correction one two six three proceed direct papa romeo five three two
+   TVS1263 DIRECT_TO PR532 none
+2016-10-02__08-50-06-13:
+   sky_travel eight one two proceed direct  correction  sky_travel eight one delta three direct to  papa romeo five double three 
+   TVS81D3 DIRECT_TO PR533 none
+2016-10-02__08-51-06-13:
+   sky_travel double one two six proceed direct papa romeo three hundred
+   TVS1126 DIRECT_TO PR300 none
+2016-10-02__08-52-06-13:
+   proceed direct papa romeo five three two sky_travel one one two six turn left heading zero six five
+   TVS1126 DIRECT_TO PR532 none
+   TVS1126 HEADING 065 LEFT
+2016-10-02__08-53-00-00:
+   sky_travel one one two alfa is correct qnh one zero three two 
+   TVS112 INFORMATION ATIS A
+   TVS112 INFORMATION QNH 1032
+2016-10-02__08-54-02-04:
+   qnh one zero three three sky_travel one foxtrot two alfa
+   TVS1F2A INFORMATION QNH 1032
+2016-10-02__08-54-03-03:
+   direct rapet sky_travel one one two alfa
+   TVS112A DIRECT_TO RAPET none
+2016-10-02__08-55-03-03:
+   hello austrian triple six echo direct rapet squawk two one seven zero
+   AUA666E DIRECT_TO RAPET none
+   AUA666E SQUAWK 0170
+2016-10-02__08-55-03-03:
+   hello austrian two hundred echo direct rapet 
+   AUA200E DIRECT_TO RAPET none
+2016-10-02__08-55-03-03:
+   hello austrian seven thousand  direct rapet 
+   AUA7000 DIRECT_TO RAPET none
+2016-10-02__08-52-06-13:
+   proceed direct papa romeo five three two turn left heading zero six correction turn turn by two zero to the left for sky_travel one one two six
+   TVS1126 DIRECT_TO PR532 none
+   TVS1126 TURN_BY 20 LEFT

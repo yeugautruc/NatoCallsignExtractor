@@ -79,6 +79,7 @@ public:
         {"W", {"whisky"}},
         {"Z", {"zoulou"}},
         {"X", {"xray"}},
+        {"F", {"fox"}},
         {"ABP", {"b_air"}},
         {"ACA", {"canada"}},
         {"AFR", {"air_france"}},
